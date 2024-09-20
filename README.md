@@ -14,40 +14,47 @@ Runs Packer commands to initialize and build infrastructure using environment va
 YAML Definition
 Include this pipe in your bitbucket-pipelines.yml file and define the required environment variables:
 
-yaml
-Copy code
-- step:
-    name: Run Packer Build
-    script:
-      - pipe: <your-pipe>
-        variables:
-          AWS_DEFAULT_REGION: "<string>"
-          AWS_ROLE_ARN: "<string>"
-          AWS_ROLE_SESSION_NAME: "<string>"
-          AWS_ENVIRONMENT: "<string>"
-          AWS_VPC_ID: "<string>"
-          AWS_SUBNET_ID: "<string>"
-          AWS_SECURITY_GROUP_ID: "<string>"
-          AWS_PARAMETER_STORE_NAME: "<string>"
-          PACKER_SOURCE_NAME: "<string>"
-          AWS_PARAMETER_UPDATE_FILENAME: "<string>"
-          
-Environment Variables
-Variable	Description
-AWS_DEFAULT_REGION (*)	AWS region to execute the Packer build. Example: eu-west-1.
-AWS_ROLE_ARN (*)	The AWS IAM role ARN to assume. Required for OIDC authentication.
-AWS_ROLE_SESSION_NAME (*)	Session name for the assumed AWS role.
-AWS_ENVIRONMENT (*)	Name of the environment (e.g., staging, production).
-AWS_VPC_ID (*)	The VPC ID where the infrastructure will be deployed.
-AWS_SUBNET_ID (*)	The Subnet ID to be used for provisioning infrastructure.
-AWS_SECURITY_GROUP_ID (*)	The Security Group ID associated with the infrastructure.
-AWS_PARAMETER_STORE_NAME (*)	The name of the AWS Systems Manager Parameter Store parameter to retrieve.
-PACKER_SOURCE_NAME (*)	The name of the source or AMI for the Packer build.
-AWS_PARAMETER_UPDATE_FILENAME (*)	The name of the file containing updates for AWS SSM Parameter Store.
-BITBUCKET_STEP_OIDC_TOKEN	Bitbucket OIDC token (automatically injected by Bitbucket in OIDC-enabled steps).
-(*) = Required variable
+```yaml
+ steps:
+    - step: &Packer
+        name: 'Packer Build'
+        oidc: true
+        script:   
+          - pipe: docker://davefoley/bitbucket-packer:latest
+            variables:
+              AWS_DEFAULT_REGION: "<string>"
+              AWS_ROLE_ARN: "<string>"
+              AWS_ROLE_SESSION_NAME: "<string>"
+              AWS_ENVIRONMENT: "<string>"
+              AWS_VPC_ID: "<string>"
+              PACKER_SOURCE_NAME: "<string>"
+              AWS_SUBNET_ID: "<string>"
+              AWS_SECURITY_GROUP_ID: "<string>"
+              AWS_PARAMETER_STORE_NAME: "<string>"
+              AWS_PARAMETER_UPDATE_FILENAME: "<string>"
+```
 
-Key Functions
+
+## Variables
+
+| Variable                          | Usage                                                                                                                                          |
+|-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| AWS_DEFAULT_REGION (*)                 | AWS region to execute the Packer build. Example: eu-west-1..                                                                                                                 |
+| AWS_ROLE_ARN (*)                   | he AWS IAM role ARN to assume. Required for OIDC authentication                                      |
+| AWS_ROLE_SESSION_NAME (*)                   | Session name for the assumed AWS role.                                          |
+| AWS_ENVIRONMENT (*)               | Name of the environment (e.g., staging, production). |
+| AWS_VPC_ID (*) | 	The VPC ID where the infrastructure will be deployed..                                                                     |
+| AWS_SUBNET_ID (*)                   | The Subnet ID to be used for provisioning infrastructure.
+| AWS_SECURITY_GROUP_ID (*)                   | The Security Group ID associated with the infrastructure.  |
+| AWS_PARAMETER_STORE_NAME (*)                   | The name of the AWS Systems Manager Parameter Store parameter to retrieve.  |
+| PACKER_SOURCE_NAME (*)                 | The name of the file containing updates for AWS SSM Parameter Store.  |
+| AWS_PARAMETER_UPDATE_FILENAME (*)                  | The Security Group ID associated with the infrastructure.  |
+| BITBUCKET_STEP_OIDC_TOKEN (*)                             | 	Bitbucket OIDC token (automatically injected by Bitbucket in OIDC-enabled steps).                                                                                             |
+
+_(*) = required variable._
+
+
+### Key Functions
 1. setup_aws_env_credentials()
 Assumes the AWS IAM role using Bitbucket's OIDC token.
 Fetches the token from the BITBUCKET_STEP_OIDC_TOKEN environment variable.
@@ -57,7 +64,8 @@ Initializes the Packer configuration and executes the Packer build.
 
 Uses the environment variables provided (such as VPC ID, Subnet ID, Security Group ID, and AWS SSM Parameter) in the build process.
 
-Commands:
+
+### Commands:
 
 packer init: Initializes the Packer template.
 packer build: Runs the Packer build with the environment variables passed as -var arguments.
