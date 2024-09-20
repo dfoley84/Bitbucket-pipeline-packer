@@ -1,0 +1,14 @@
+name: Packer build 
+image: davefoley/bitbucket-packer:latest
+description: This is a pipe to run a Packer hcl file
+category: Deployment
+repository: https://github.com/dfoley84/Bitbucket-pipeline-packer
+vendor:
+  name: HashiCorp
+  website: https://developer.hashicorp.com/packer
+maintainer:
+  name: David
+  website: https://github.com/dfoley84/
+tags:
+    - deployment
+    - bitbucket-pipelines

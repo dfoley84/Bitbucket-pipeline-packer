@@ -1,0 +1,2 @@
+boto3==1.34.*
+bitbucket-pipes-toolkit==4.*
