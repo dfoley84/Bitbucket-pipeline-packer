@@ -1,4 +1,5 @@
 # bitbucket-packer
+[![Build and deploy ASP.Net Core app to Azure Web App - bloodpressure-ca](https://github.com/dfoley84/Bitbucket-pipeline-packer/actions/workflows/docker-publish.yml/badge.svg?branch=main)](https://github.com/dfoley84/Bitbucket-pipeline-packer/actions/workflows/docker-publish.yml)
 
 This Bitbucket pipe assumes an AWS role using OpenID Connect (OIDC) and runs a Packer build that provisions infrastructure based on provided environment variables, including AWS VPC, Subnet, Security Group, and AWS Systems Manager (SSM) Parameter Store details.
 
