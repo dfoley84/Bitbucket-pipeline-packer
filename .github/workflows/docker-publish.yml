@@ -74,27 +74,13 @@ jobs:
           TAGS: ${{ steps.meta.outputs.tags }}
           DIGEST: ${{ steps.build-and-push.outputs.digest }}
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
-
-      - name: Install Trivy
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget
-          wget https://github.com/aquasecurity/trivy/releases/download/v0.28.0/trivy_0.28.0_Linux-64bit.deb
-          sudo dpkg -i trivy_0.28.0_Linux-64bit.deb
-
-      - name: Run Trivy scan with retry
-        run: |
-          for i in {1..4}; do
-            if trivy image --format table --output trivy-report.txt ${{ steps.build-and-push.outputs.digest }}; then
-              break
-            elif [ $i -lt 4 ]; then
-              echo "Retrying in 30 seconds..."
-              sleep 30
-            else
-              echo "Trivy scan failed after 4 attempts."
-              exit 1
-            fi
-          done
+        
+      - name: Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.meta.outputs.digest }}
+          format: table
+          output: trivy-report.txt
 
       - name: Upload Trivy Report
         uses: actions/upload-artifact@v3
