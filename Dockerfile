@@ -1,4 +1,4 @@
-FROM python:3.10-slim as build
+FROM python:3.12-slim as build
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY pipe/ requirements.txt LICENSE.txt pipe.yml /
