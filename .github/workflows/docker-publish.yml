@@ -83,7 +83,7 @@ jobs:
           output: trivy-report.txt
 
       - name: Upload Trivy Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: trivy-report
           path: trivy-report.txt
